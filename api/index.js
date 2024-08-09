@@ -90,6 +90,7 @@ const upload = multer({
 
 app.put('/users/:userId/profile-images', upload.single('profilePicture'), async (req, res) => {
   console.log('File:', req.file);  // Log the file object
+
   if (!req.file) {
     return res.status(400).send({ success: false, message: 'No file uploaded' });
   }
@@ -116,7 +117,7 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
     });
 
     blobStream.on('error', (error) => {
-      console.error(error);
+      console.error('Upload error:', error);
       res.status(500).send({ success: false, message: 'Upload error' });
     });
 
@@ -129,13 +130,15 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
       res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
     });
 
-    blobStream.end(file.buffer);  // Write the file buffer to Firebase Storage
+    // Handle stream end properly
+    blobStream.end(file.buffer); 
 
   } catch (error) {
-    console.error(error);
+    console.error('Server error:', error);
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
+
 
 
 //endpoint to register a user to the backend
