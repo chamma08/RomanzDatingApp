@@ -98,10 +98,6 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
   const { userId } = req.params;
   const file = req.file;
 
-  if (!file) {
-    return res.status(400).send({ success: false, message: 'No file uploaded' });
-  }
-
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -138,6 +134,7 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
+
 
 
 
