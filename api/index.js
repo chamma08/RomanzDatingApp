@@ -118,19 +118,24 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
     });
 
     blobStream.on('finish', async () => {
-      const profilePictureUrl = `https://storage.googleapis.com/${bucket.name}/${destination}`;
+      try {
+        const profilePictureUrl = `https://storage.googleapis.com/${bucket.name}/${destination}`;
 
-      user.profilePicture = profilePictureUrl;
-      await user.save();
+        user.profilePicture = profilePictureUrl;
+        await user.save();
 
-      res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
+        res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
+      } catch (saveError) {
+        console.error('Error saving user profile:', saveError);
+        res.status(500).send({ success: false, message: 'Error saving user profile' });
+      }
     });
 
-    // Check if file.buffer is valid
-    if (file.buffer) {
+    // Check if file.buffer is valid and has data
+    if (file.buffer && file.buffer.length > 0) {
       blobStream.end(file.buffer);
     } else {
-      throw new Error('File buffer is empty');
+      throw new Error('File buffer is empty or invalid');
     }
 
   } catch (error) {
@@ -138,6 +143,7 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
+
 
 
 
