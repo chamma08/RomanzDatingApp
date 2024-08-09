@@ -108,7 +108,7 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
     const blob = bucket.file(destination);
 
     const blobStream = blob.createWriteStream({
-      resumable: false,
+      resumable: true,
       contentType: file.mimetype,
     });
 
@@ -120,10 +120,8 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
     blobStream.on('finish', async () => {
       try {
         const profilePictureUrl = `https://storage.googleapis.com/${bucket.name}/${destination}`;
-
         user.profilePicture = profilePictureUrl;
         await user.save();
-
         res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
       } catch (saveError) {
         console.error('Error saving user profile:', saveError);
@@ -131,18 +129,15 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
       }
     });
 
-    // Check if file.buffer is valid and has data
-    if (file.buffer && file.buffer.length > 0) {
-      blobStream.end(file.buffer);
-    } else {
-      throw new Error('File buffer is empty or invalid');
-    }
+    // Directly pipe the buffer into the stream
+    blobStream.end(file.buffer);
 
   } catch (error) {
     console.error('Server error:', error);
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
+
 
 
 
