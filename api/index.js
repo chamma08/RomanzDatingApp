@@ -108,27 +108,35 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
     }
 
     const destination = `profilePictures/${userId}${path.extname(file.originalname)}`;
+    const blob = bucket.file(destination);
 
-    const uploadedFile = await bucket.upload(file.path, {
-      destination,
-      metadata: {
-        contentType: file.mimetype,
-      },
+    const blobStream = blob.createWriteStream({
+      resumable: false,
+      contentType: file.mimetype,
     });
 
-    const profilePictureUrl = `https://storage.googleapis.com/${bucket.name}/${destination}`;
+    blobStream.on('error', (error) => {
+      console.error(error);
+      res.status(500).send({ success: false, message: 'Upload error' });
+    });
 
-    user.profilePicture = profilePictureUrl;
-    await user.save();
+    blobStream.on('finish', async () => {
+      const profilePictureUrl = `https://storage.googleapis.com/${bucket.name}/${destination}`;
 
-    fs.unlinkSync(file.path);
+      user.profilePicture = profilePictureUrl;
+      await user.save();
 
-    res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
+      res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
+    });
+
+    blobStream.end(file.buffer);  // Write the file buffer to Firebase Storage
+
   } catch (error) {
     console.error(error);
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
+
 
 //endpoint to register a user to the backend
 app.post("/register", async (req, res) => {
