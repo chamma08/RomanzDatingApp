@@ -30,7 +30,7 @@ import LottieView from "lottie-react-native";
   
     const handleMatch = async (selectedUserId) => {
       try {
-        await axios.post("http://192.168.8.189:3000/create-match", {
+        await axios.post("https://romanz-dating-app.vercel.app/create-match", {
           currentUserId: userId,
           selectedUserId: selectedUserId,
         });

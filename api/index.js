@@ -16,11 +16,11 @@ const cors = require("cors");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
-app.use(cors( {
+app.use(cors( /* {
   origin: 'https://romanz-dating-app.vercel.app/',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-} 
+}  */
 ));
 
 mongoose
@@ -81,14 +81,12 @@ app.use(express.urlencoded({ extended: true }));
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+  limits: { fileSize: 20 * 1024 * 1024 }, // 10 MB limit
 });
 
 
 
-
-
-app.put('/users/:userId/profile-images', upload.single('profilePicture'), async (req, res) => {
+/* app.put('/users/:userId/profile-images', upload.single('profilePicture'), async (req, res) => {
   console.log('File:', req.file);  // Log the file object
 
   if (!req.file) {
@@ -135,6 +133,30 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
   } catch (error) {
     console.error('Server error:', error);
     res.status(500).send({ success: false, message: 'Server error' });
+  }
+});
+ */
+
+app.put('/users/:userId/profile-images', async (req, res) => {
+  const { userId } = req.params;
+  const { profilePictureUrl } = req.body;
+
+  if (!profilePictureUrl) {
+    return res.status(400).send({ success: false, message: 'No URL provided' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send({ success: false, message: 'User not found' });
+    }
+
+    user.profilePicture = profilePictureUrl;
+    await user.save();
+    res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    res.status(500).send({ success: false, message: 'Error updating user profile' });
   }
 });
 

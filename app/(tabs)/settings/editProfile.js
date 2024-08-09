@@ -24,7 +24,7 @@ import * as FileSystem from 'expo-file-system';
 import { storage, ref, uploadBytes, getDownloadURL } from '../../../firebase';
 
 
-const editProfile = () => {
+const editProfile = ({}) => {
   const [image, setImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState();
   const [originalImage, setOriginalImage] = useState("");
@@ -38,6 +38,7 @@ const editProfile = () => {
   const [isEmailChanged, setIsEmailChanged] = useState(false);
   const [originalName, setOriginalName] = useState("");
   const [originalEmail, setOriginalEmail] = useState("");
+  const [profiles, setProfiles] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -54,8 +55,22 @@ const editProfile = () => {
           `http://192.168.8.189:3000/users/${userId}`
         );
         const user = response.data;
-        setImage(user?.user.profilePicture);
-        setOriginalImage(user?.user.profilePicture);
+        console.log(user);
+
+
+        const profileImageWithCacheBuster = `${user?.user?.profilePicture}?t=${new Date().getTime()}`;
+
+        if (profileImageWithCacheBuster) {
+          setImage(profileImageWithCacheBuster);
+          setOriginalImage(profileImageWithCacheBuster);
+        } else {
+          console.warn('Profile image URL is not defined');
+        }
+        
+        
+        //setProfiles(user?.user?.profilePicture);
+        /* setImage(user?.user.profilePicture);
+        setOriginalImage(user?.user.profilePicture); */
         setName(user?.user?.name);
         setEmail(user?.user?.email);
         setGender(user?.user?.gender);
@@ -72,52 +87,72 @@ const editProfile = () => {
 
   const updateProfileImage = async () => {
     try {
-      // Check if image is selected
       if (!image) {
         alert("No image selected");
         return;
       }
   
-      // Create a FormData object
-      const formData = new FormData();
-      formData.append('profilePicture', {
-        uri: image,
-        type: 'image/jpeg', // Adjust this according to the actual file type
-        name: `${userId}.jpg`, // Adjust this according to the actual file name
-      });
+      // Debugging log
+      console.log("Uploading image from URI:", image);
   
-      // Upload the file to Firebase
-      const imageRef = ref(storage, `profilePictures/${userId}.jpg`);
+      // Fetch the image as a blob
       const response = await fetch(image);
+      if (!response.ok) {
+        throw new Error("Image fetch failed");
+      }
       const blob = await response.blob();
-      
-      await uploadBytes(imageRef, blob);
-      const downloadURL = await getDownloadURL(imageRef);
+      console.log("Blob created successfully");
   
-      // Send the URL to your server
+      // Create a reference to Firebase Storage
+      const imageRef = ref(storage, `profilePictures/${userId}.jpg`);
+      console.log("Uploading blob to Firebase Storage");
+  
+      // Upload the blob to Firebase Storage
+      await uploadBytes(imageRef, blob);
+      console.log("Upload successful");
+  
+      // Get the download URL of the uploaded image
+      const downloadURL = await getDownloadURL(imageRef);
+      console.log("Download URL:", downloadURL);
+  
+      // Update the profile image URL on the server
       const serverResponse = await axios.put(
         `http://192.168.8.189:3000/users/${userId}/profile-images`,
-        formData,
+        { profilePictureUrl: downloadURL },
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
           },
         }
       );
   
+      console.log("Server response:", serverResponse);
+  
       if (serverResponse.status === 200) {
-        setSelectedImage(downloadURL);
+        // Add cache-busting query parameter to the image URL
+        const updatedImageWithCacheBuster = `${downloadURL}?t=${new Date().getTime()}`;
+        console.log("Updated Image URL with cache-buster:", updatedImageWithCacheBuster);
+  
+        // Update local state with the new image URL
+        setImage(updatedImageWithCacheBuster);
+        setSelectedImage(updatedImageWithCacheBuster);
+        setOriginalImage(updatedImageWithCacheBuster);
+  
         alert("Profile Image updated successfully");
         setIsImageChanged(false);
-        setOriginalImage(downloadURL);
       } else {
+        console.error("Failed to update profile image. Server response:", serverResponse.data);
         alert("Failed to update profile image.");
       }
     } catch (error) {
-      console.error("Error updating profile image:", error);
+      console.error("Error updating profile image:", error.response ? error.response.data : error.message);
       alert("An error occurred while updating the Profile Image.");
     }
   };
+  
+  
+  
+  
   
   
   
@@ -153,7 +188,7 @@ const editProfile = () => {
   const updateName = async () => {
     try {
       const response = await axios.put(
-        `http://192.168.8.189:3000/users/${userId}/name`,
+        `https://romanz-dating-app.vercel.app/users/${userId}/name`,
         {
           name: name,
         }
@@ -175,7 +210,7 @@ const editProfile = () => {
   const updateEmail = async () => {
     try {
       const response = await axios.put(
-        `http://192.168.8.189:3000/users/${userId}/email`,
+        `https://romanz-dating-app.vercel.app/users/${userId}/email`,
         {
           email: email,
         }
@@ -272,7 +307,8 @@ const editProfile = () => {
           >
             <TouchableOpacity onPress={handleImageSelection}>
               <Image
-                source={{ uri: selectedImage || image , cache: 'reload'  }}
+                source={{ uri: image ||
+                  "https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg=", }}
                 
                 style={{
                   width: 200,
@@ -282,7 +318,7 @@ const editProfile = () => {
                   borderColor: "#a3a3a3",
                 }}
               />
-              
+              {console.log(image)}
               <View
                 style={{
                   position: "absolute",
