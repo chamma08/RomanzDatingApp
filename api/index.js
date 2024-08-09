@@ -1,27 +1,46 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const cors = require("cors");
-const multer = require('multer');
-const path = require('path');
-const { Storage } = require('@google-cloud/storage');
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 require('dotenv').config();
 
+const multer = require('multer');
+const path = require('path');
+
 const app = express();
 const port = 3000;
+const cors = require("cors");
 
-app.use(cors({
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
+
+app.use(cors( {
   origin: 'https://romanz-dating-app.vercel.app/',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}));
+} 
+));
 
-mongoose.connect("mongodb+srv://romanzu:romanzu@cluster0.hrd19zs.mongodb.net/")
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((error) => console.error("Error connecting to MongoDB", error));
+mongoose
+  .connect("mongodb+srv://romanzu:romanzu@cluster0.hrd19zs.mongodb.net/")
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("Error connecting to MongoDB");
+  });
 
-const admin = require('firebase-admin');
+app.listen(port, () => {
+  console.log("Server is running on 3000");
+});
+
+app.get('/', (req, res) =>
+  
+  res.send('Hello World!'));
+
+require('dotenv').config();
 
 const firebaseConfig = {
   projectId: process.env.FIREBASE_PROJECT_ID,
@@ -36,20 +55,38 @@ const firebaseConfig = {
   universeDomain: process.env.FIREBASE_UNIVERSE_DOMAIN
 };
 
+
+//const serviceAccount = require("C:/Users/User/Desktop/RomanzDatingApp/api/key.json");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+const jwt = require("jsonwebtoken");
+const User = require("./models/user");
+const Chat = require("./models/message");
+
+const admin = require('firebase-admin');
+const fs = require('fs');
+
 admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
   storageBucket: 'mern-blog-19722.appspot.com',
 });
 
+
 const bucket = admin.storage().bucket();
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
 });
+
+
+
+
 
 app.put('/users/:userId/profile-images', upload.single('profilePicture'), async (req, res) => {
   console.log('File:', req.file);  // Log the file object
@@ -60,6 +97,10 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
 
   const { userId } = req.params;
   const file = req.file;
+
+  if (!file) {
+    return res.status(400).send({ success: false, message: 'No file uploaded' });
+  }
 
   try {
     const user = await User.findById(userId);
@@ -89,18 +130,14 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
       res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
     });
 
-    blobStream.end(file.buffer);
-    
+    // Handle stream end properly
+    blobStream.end(file.buffer); 
+
   } catch (error) {
     console.error('Server error:', error);
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
 
 
 
