@@ -23,7 +23,22 @@ app.use(cors( {
 } 
 ));
 
-app.get('/', (req, res) => res.send('Hello World!'));
+mongoose
+  .connect("mongodb+srv://romanzu:romanzu@cluster0.hrd19zs.mongodb.net/")
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("Error connecting to MongoDB");
+  });
+
+app.listen(port, () => {
+  console.log("Server is running on 3000");
+});
+
+app.get('/', (req, res) =>
+  
+  res.send('Hello World!'));
 
 require('dotenv').config();
 
@@ -78,18 +93,7 @@ const upload = multer({
 
 
 
-mongoose
-  .connect("mongodb+srv://romanzu:romanzu@cluster0.hrd19zs.mongodb.net/")
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("Error connecting to MongoDB");
-  });
 
-app.listen(port, () => {
-  console.log("Server is running on 3000");
-});
 
 app.put('/users/:userId/profile-images', upload.single('profilePicture'), async (req, res) => {
   console.log('File:', req.file);  // Log the file object
