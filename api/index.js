@@ -126,14 +126,19 @@ app.put('/users/:userId/profile-images', upload.single('profilePicture'), async 
       res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
     });
 
-    // Handle stream end properly
-    blobStream.end(file.buffer); 
+    // Check if file.buffer is valid
+    if (file.buffer) {
+      blobStream.end(file.buffer);
+    } else {
+      throw new Error('File buffer is empty');
+    }
 
   } catch (error) {
     console.error('Server error:', error);
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
+
 
 
 
