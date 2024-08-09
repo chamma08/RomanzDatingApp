@@ -82,12 +82,7 @@ app.use(express.urlencoded({ extended: true }));
 const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      // Ensure directory exists
-      const uploadDir = path.join(__dirname, 'uploads/profile-pictures');
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-      cb(null, uploadDir);
+      cb(null, 'uploads/profile-pictures');
     },
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}_${file.originalname}`);
