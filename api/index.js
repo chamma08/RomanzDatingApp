@@ -16,11 +16,11 @@ const cors = require("cors");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
-app.use(cors(/* {
+app.use(cors( {
   origin: 'https://romanz-dating-app.vercel.app/',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-} */
+} 
 ));
 
 require('dotenv').config();
