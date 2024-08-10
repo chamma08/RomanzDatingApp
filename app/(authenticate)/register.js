@@ -59,7 +59,7 @@ const Register = () => {
 
     const user = { name, email, password, age };
 
-    axios.post("http://192.168.8.189:3000/register", user)
+    axios.post("https://romanz-dating-app.vercel.app/register", user)
       .then((response) => {
         console.log(response);
         Alert.alert("Registration Successful", "You have been registered successfully");

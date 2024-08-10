@@ -46,7 +46,7 @@ const login = () => {
       email: email,
       password: password,
     };
-    axios.post("http://192.168.8.189:3000/login", user)
+    axios.post("https://romanz-dating-app.vercel.app/login", user)
       .then((response) => {
         console.log(response);
         const token = response.data.token;

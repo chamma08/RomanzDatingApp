@@ -55,7 +55,7 @@ const chatRoom = ({receiverId}) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`http://192.168.8.189:3000/users/${userId}`);
+        const response = await axios.get(`https://romanz-dating-app.vercel.app/users/${userId}`);
         const user = response.data;
         setProfile(user?.user?.profilePicture);
       } catch (error) {

@@ -52,7 +52,7 @@ const editProfile = ({}) => {
     const fetchUserProfile = async (userId) => {
       try {
         const response = await axios.get(
-          `http://192.168.8.189:3000/users/${userId}`
+          `https://romanz-dating-app.vercel.app/users/${userId}`
         );
         const user = response.data;
         console.log(user);
@@ -117,7 +117,7 @@ const editProfile = ({}) => {
   
       // Update the profile image URL on the server
       const serverResponse = await axios.put(
-        `http://192.168.8.189:3000/users/${userId}/profile-images`,
+        `https://romanz-dating-app.vercel.app/users/${userId}/profile-images`,
         { profilePictureUrl: downloadURL },
         {
           headers: {

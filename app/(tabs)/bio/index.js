@@ -105,7 +105,7 @@ const index = () => {
   const fetchUserDescription = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.8.189:3000/users/${userId}`
+        `https://romanz-dating-app.vercel.app/users/${userId}`
       );
       console.log(response);
       const user = response.data;
@@ -127,7 +127,7 @@ const index = () => {
   const updateUserDescription = async () => {
     try {
       const response = await axios.put(
-        `http://192.168.8.189:3000/users/${userId}/description`,
+        `https://romanz-dating-app.vercel.app/users/${userId}/description`,
         {
           description: description,
         }

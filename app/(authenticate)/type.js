@@ -72,7 +72,7 @@ const type = () => {
   const addTurnOn = async (turnOn) => {
     try {
       const response = await axios.put(
-        `http://192.168.8.189:3000/users/${userId}/turn-ons/add`,
+        `https://romanz-dating-app.vercel.app/users/${userId}/turn-ons/add`,
         {
           turnOn: turnOn,
         }
@@ -90,7 +90,7 @@ const type = () => {
   const removeTurnOn = async (turnOn) => {
     try {
       const response = await axios.put(
-        `http://192.168.8.189:3000/users/${userId}/turn-ons/remove`,
+        `https://romanz-dating-app.vercel.app/users/${userId}/turn-ons/remove`,
         {
           turnOn: turnOn,
         }

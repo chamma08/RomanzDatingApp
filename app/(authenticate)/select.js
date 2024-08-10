@@ -29,7 +29,7 @@ const select = () => {
   const updateUserGender = async () => {
     try {
       const response = await axios.put(
-        `http://192.168.8.189:3000/users/${userId}/gender`,
+        `https://romanz-dating-app.vercel.app/users/${userId}/gender`,
         {
           gender: option,
         }

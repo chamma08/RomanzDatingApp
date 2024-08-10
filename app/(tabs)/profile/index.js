@@ -36,7 +36,7 @@ const index = () => {
   const fetchUserDescription = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.8.189:3000/users/${userId}`
+        `https://romanz-dating-app.vercel.app/users/${userId}`
       );
       console.log(response);
       const user = response.data;
@@ -48,7 +48,7 @@ const index = () => {
 
   const fetchProfiles = async () => {
     try {
-      const response = await axios.get("http://192.168.8.189:3000/profiles", {
+      const response = await axios.get("https://romanz-dating-app.vercel.app/profiles", {
         params: {
           userId: userId,
           gender: user?.gender,
