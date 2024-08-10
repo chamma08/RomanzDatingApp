@@ -13,7 +13,7 @@
     "splash": {
       "image": "./assets/RomanzuLogo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ff2655" 
     },
     "ios": {
       "supportsTablet": true
@@ -21,7 +21,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/RomanzuLogo.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ff2655"
       },
       "package": "com.chamma08.RomanzDatingApp"
     },
