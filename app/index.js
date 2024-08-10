@@ -8,6 +8,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { Redirect } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
 
