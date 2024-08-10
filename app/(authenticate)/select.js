@@ -4,6 +4,7 @@ import {
   View,
   Pressable,
   Image,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -45,10 +46,10 @@ const select = () => {
     }
   };
   return (
-    <View style={{ flex: 1, backgroundColor: "white", padding: 12 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "white", padding: 12 }}>
       <Image
         source={require("../../assets/r.png")}
-        style={{ width: 450, height: 350, alignSelf: "center" }}
+        style={{ width: 400, height: 300, alignSelf: "center" }}
       />
       <Pressable
         onPress={() => setOption("male")}
@@ -136,7 +137,7 @@ const select = () => {
           </Text>
         </Pressable>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
