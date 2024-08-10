@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "RomanzDatingApp",
+    "name": "Romanz Dating App",
     "slug": "RomanzDatingApp",
-    "entryPoint": "./index.js",
+    "entryPoint": "app/index.js",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/RomanzuLogo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.chamma08.RomanzDatingApp"
