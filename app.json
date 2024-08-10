@@ -2,13 +2,16 @@
   "expo": {
     "name": "Romanz Dating App",
     "slug": "RomanzDatingApp",
-    "entryPoint": "app/index.js",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/RomanzuLogo.png",
     "userInterfaceStyle": "light",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "entryPoint": "./app/index.js",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/RomanzuLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,7 +25,7 @@
       },
       "package": "com.chamma08.RomanzDatingApp"
     },
-    "scheme": "RomanzU Dating App",
+    "scheme": "RomanzUDatingApp",
     "web": {
       "favicon": "./assets/favicon.png"
     },
