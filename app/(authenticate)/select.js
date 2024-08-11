@@ -97,7 +97,7 @@ const select = () => {
         />
       </Pressable>
 
-      <Pressable
+      {/* <Pressable
         onPress={() => setOption("nonbinary")}
         style={{
           backgroundColor: "#F0F0F0",
@@ -118,7 +118,7 @@ const select = () => {
             uri: "https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/warning.png?alt=media&token=8e681fdb-b80c-4f67-8558-1dd68d2a2d53",
           }}
         />
-      </Pressable>
+      </Pressable> */}
 
       {option && (
         <Pressable

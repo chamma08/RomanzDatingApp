@@ -16,11 +16,11 @@ const cors = require("cors");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
-app.use(cors( /* {
+app.use(cors(  {
   origin: 'https://romanz-dating-app.vercel.app/',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}  */
+}  
 ));
 
 mongoose
@@ -678,9 +678,10 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(8000, () => {
-  console.log("Socket.IO server running on port 8000");
+http.listen(port, () => {
+  console.log(`Server is running on ${port}`);
 });
+
 
 app.get("/messages", async (req, res) => {
   try {

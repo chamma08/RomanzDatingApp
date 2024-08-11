@@ -250,7 +250,7 @@ const editProfile = ({}) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "#f4f4f4",
+        backgroundColor: "#ffffff",
         paddingHorizontal: 22,
       }}
     >
@@ -370,7 +370,7 @@ const editProfile = ({}) => {
           padding: 12,
           borderRadius: 10,
           backgroundColor: "#fffae5",
-          marginTop: 10,
+          marginTop: 20,
           marginBottom: 10,
           elevation: 5, // Android shadow
           shadowColor: '#000', // iOS shadow
