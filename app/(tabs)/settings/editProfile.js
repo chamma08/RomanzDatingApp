@@ -20,9 +20,8 @@ import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { Entypo } from "@expo/vector-icons";
-import * as FileSystem from 'expo-file-system';
-import { storage, ref, uploadBytes, getDownloadURL } from '../../../firebase';
-
+import * as FileSystem from "expo-file-system";
+import { storage, ref, uploadBytes, getDownloadURL } from "../../../firebase";
 
 const editProfile = ({}) => {
   const [image, setImage] = useState(null);
@@ -57,17 +56,17 @@ const editProfile = ({}) => {
         const user = response.data;
         console.log(user);
 
-
-        const profileImageWithCacheBuster = `${user?.user?.profilePicture}?t=${new Date().getTime()}`;
+        const profileImageWithCacheBuster = `${
+          user?.user?.profilePicture
+        }?t=${new Date().getTime()}`;
 
         if (profileImageWithCacheBuster) {
           setImage(profileImageWithCacheBuster);
           setOriginalImage(profileImageWithCacheBuster);
         } else {
-          console.warn('Profile image URL is not defined');
+          console.warn("Profile image URL is not defined");
         }
-        
-        
+
         //setProfiles(user?.user?.profilePicture);
         /* setImage(user?.user.profilePicture);
         setOriginalImage(user?.user.profilePicture); */
@@ -91,10 +90,10 @@ const editProfile = ({}) => {
         alert("No image selected");
         return;
       }
-  
+
       // Debugging log
       console.log("Uploading image from URI:", image);
-  
+
       // Fetch the image as a blob
       const response = await fetch(image);
       if (!response.ok) {
@@ -102,60 +101,62 @@ const editProfile = ({}) => {
       }
       const blob = await response.blob();
       console.log("Blob created successfully");
-  
+
       // Create a reference to Firebase Storage
       const imageRef = ref(storage, `profilePictures/${userId}.jpg`);
       console.log("Uploading blob to Firebase Storage");
-  
+
       // Upload the blob to Firebase Storage
       await uploadBytes(imageRef, blob);
       console.log("Upload successful");
-  
+
       // Get the download URL of the uploaded image
       const downloadURL = await getDownloadURL(imageRef);
       console.log("Download URL:", downloadURL);
-  
+
       // Update the profile image URL on the server
       const serverResponse = await axios.put(
         `https://romanz-dating-app.vercel.app/users/${userId}/profile-images`,
         { profilePictureUrl: downloadURL },
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-  
+
       console.log("Server response:", serverResponse);
-  
+
       if (serverResponse.status === 200) {
         // Add cache-busting query parameter to the image URL
         const updatedImageWithCacheBuster = `${downloadURL}?t=${new Date().getTime()}`;
-        console.log("Updated Image URL with cache-buster:", updatedImageWithCacheBuster);
-  
+        console.log(
+          "Updated Image URL with cache-buster:",
+          updatedImageWithCacheBuster
+        );
+
         // Update local state with the new image URL
         setImage(updatedImageWithCacheBuster);
         setSelectedImage(updatedImageWithCacheBuster);
         setOriginalImage(updatedImageWithCacheBuster);
-  
+
         alert("Profile Image updated successfully");
         setIsImageChanged(false);
       } else {
-        console.error("Failed to update profile image. Server response:", serverResponse.data);
+        console.error(
+          "Failed to update profile image. Server response:",
+          serverResponse.data
+        );
         alert("Failed to update profile image.");
       }
     } catch (error) {
-      console.error("Error updating profile image:", error.response ? error.response.data : error.message);
+      console.error(
+        "Error updating profile image:",
+        error.response ? error.response.data : error.message
+      );
       alert("An error occurred while updating the Profile Image.");
     }
   };
-  
-  
-  
-  
-  
-  
-  
 
   const handleImageSelection = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -166,14 +167,14 @@ const editProfile = ({}) => {
       );
       return;
     }
-  
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 4],
       quality: 0.5, // Reduce quality to compress image
     });
-  
+
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const fileUri = result.assets[0].uri;
       setImage(fileUri);
@@ -182,8 +183,6 @@ const editProfile = ({}) => {
       console.log("Image selection was cancelled or URI is not available");
     }
   };
-  
-  
 
   const updateName = async () => {
     try {
@@ -255,299 +254,308 @@ const editProfile = ({}) => {
         paddingHorizontal: 22,
       }}
     >
-      <View style={{}}>
-        <ImageBackground
-          source={require("../../../assets/topVector.png")}
+      <ImageBackground
+        source={require("../../../assets/topVector.png")}
+        style={{
+          width: "112%",
+          height: 170,
+          alignSelf: "center",
+          zIndex: -5,
+        }}
+      >
+        <View
           style={{
-            width: "111%",
-            height: 170,
-            alignSelf: "center",
-            zIndex: -5,
+            justifyContent: "center",
+            marginHorizontal: 12,
+            flexDirection: "row",
+            marginTop: 20,
           }}
         >
-          <View
+          <TouchableOpacity
+            onPress={() => router.replace("settings")}
             style={{
-              justifyContent: "center",
-              marginHorizontal: 12,
-              flexDirection: "row",
-              marginTop: 20,
+              position: "absolute",
+              left: 0,
             }}
           >
+            <MaterialIcons name="keyboard-arrow-left" size={50} color="black" />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: 35,
+              fontWeight: "700",
+              color: "black",
+              textAlign: "center",
+              fontFamily: "serif",
+              fontStyle: "italic",
+            }}
+          >
+            Edit Profile
+          </Text>
+        </View>
+      </ImageBackground>
+
+      <View
+        style={{
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity onPress={handleImageSelection}>
+          <Image
+            source={{
+              uri:
+                image ||
+                "https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg=",
+            }}
+            style={{
+              width: 200,
+              height: 200,
+              borderRadius: 105,
+              borderWidth: 4,
+              borderColor: "#a3a3a3",
+            }}
+          />
+          {console.log(image)}
+          <View
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 11,
+              zIndex: 9999,
+            }}
+          >
+            <MaterialIcons name="photo-camera" size={32} color="black" />
+          </View>
+        </TouchableOpacity>
+        {isImageChanged && (
+          <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
             <TouchableOpacity
-              onPress={() => router.replace("settings")}
+              onPress={updateProfileImage}
               style={{
-                position: "absolute",
-                left: 0,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 15,
+                width: 100,
+                backgroundColor: "#1adf13",
+                borderRadius: 25,
+                justifyContent: "center",
+                padding: 5,
               }}
             >
-              <MaterialIcons
-                name="keyboard-arrow-left"
-                size={50}
-                color="black"
-              />
+              <Text style={{ color: "black" }}>Save</Text>
+              <Entypo name="check" size={20} color="black" />
             </TouchableOpacity>
-            <Text
+            <TouchableOpacity
+              onPress={cancelImageChange}
               style={{
-                fontSize: 35,
-                fontWeight: "700",
-                color: "black",
-                textAlign: "center",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 15,
+                width: 100,
+                backgroundColor: "#ff4d4d",
+                borderRadius: 25,
+                justifyContent: "center",
+                padding: 5,
               }}
             >
-              Edit Profile
-            </Text>
+              <Text style={{ color: "black" }}>Cancel</Text>
+              <Entypo name="cross" size={20} color="black" />
+            </TouchableOpacity>
           </View>
-        </ImageBackground>
+        )}
+      </View>
+      <ScrollView
+        style={{
+          flex: 1,
+          padding: 12,
+          borderRadius: 10,
+          backgroundColor: "#fffae5",
+          marginTop: 10,
+          marginBottom: 10,
+          elevation: 5, // Android shadow
+          shadowColor: '#000', // iOS shadow
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4
+        }}
+        scrollViewContent={{ flexGrow: 1 }}
+      >
+        <View style={{ flexDirection: "column", marginBottom: 10 }}>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Name</Text>
 
-        <ScrollView>
           <View
             style={{
-              alignItems: "center",
+              height: 50,
+              width: "100%",
+              backgroundColor: "white",
+              borderRadius: 10,
+              justifyContent: "center",
+              borderWidth: 1,
+              borderColor: "gray",
+              marginVertical: 6,
+              paddingLeft: 8,
             }}
           >
-            <TouchableOpacity onPress={handleImageSelection}>
-              <Image
-                source={{ uri: image ||
-                  "https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg=", }}
-                
+            <TextInput
+              value={name}
+              onChangeText={(text) => {
+                setName(text);
+                setIsNameChanged(true); // Set isNameChanged to true when the name is changed
+              }}
+              style={{ fontSize: 18 }}
+            />
+          </View>
+          {isNameChanged && (
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <TouchableOpacity
+                onPress={updateName}
                 style={{
-                  width: 200,
-                  height: 200,
-                  borderRadius: 105,
-                  borderWidth: 4,
-                  borderColor: "#a3a3a3",
-                }}
-              />
-              {console.log(image)}
-              <View
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 11,
-                  zIndex: 9999,
+                  marginTop: "auto",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 15,
+                  width: 100,
+                  backgroundColor: "#1adf13",
+                  borderRadius: 25,
+                  justifyContent: "center",
+                  padding: 5,
                 }}
               >
-                <MaterialIcons name="photo-camera" size={32} color="black" />
-              </View>
-            </TouchableOpacity>
-            {isImageChanged && (
-              <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
-                <TouchableOpacity
-                  onPress={updateProfileImage}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 15,
-                    width: 100,
-                    backgroundColor: "#1adf13",
-                    borderRadius: 25,
-                    justifyContent: "center",
-                    padding: 5,
-                  }}
-                >
-                  <Text style={{ color: "black" }}>Save</Text>
-                  <Entypo name="check" size={20} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={cancelImageChange}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 15,
-                    width: 100,
-                    backgroundColor: "#ff4d4d",
-                    borderRadius: 25,
-                    justifyContent: "center",
-                    padding: 5,
-                  }}
-                >
-                  <Text style={{ color: "black" }}>Cancel</Text>
-                  <Entypo name="cross" size={20} color="black" />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-          <View>
-            <View style={{ flexDirection: "column", marginBottom: 6 }}>
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>Name</Text>
+                <Text style={{ color: "black" }}>Save</Text>
+                <Entypo name="check" size={20} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={cancelNameChange}
+                style={{
+                  marginTop: "auto",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 15,
+                  width: 100,
+                  backgroundColor: "#ff4d4d",
+                  borderRadius: 25,
+                  justifyContent: "center",
+                  padding: 5,
+                }}
+              >
+                <Text style={{ color: "black" }}>Cancel</Text>
+                <Entypo name="cross" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
 
-              <View
+        <View style={{ flexDirection: "column", marginBottom: 6 }}>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Email</Text>
+          <View
+            style={{
+              height: 50,
+              width: "100%",
+              backgroundColor: "white",
+              borderRadius: 10,
+              justifyContent: "center",
+              borderWidth: 1,
+              borderColor: "gray",
+              marginVertical: 6,
+              paddingLeft: 8,
+            }}
+          >
+            <TextInput
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                setIsEmailChanged(true);
+              }}
+              style={{ fontSize: 18 }}
+            />
+          </View>
+          {isEmailChanged && (
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <TouchableOpacity
+                onPress={updateEmail}
                 style={{
-                  height: 50,
-                  width: "100%",
-                  backgroundColor: "white",
-                  borderRadius: 10,
+                  marginTop: "auto",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 15,
+                  width: 100,
+                  backgroundColor: "#1adf13",
+                  borderRadius: 25,
                   justifyContent: "center",
-                  borderWidth: 1,
-                  borderColor: "gray",
-                  marginVertical: 6,
-                  paddingLeft: 8,
+                  padding: 5,
                 }}
               >
-                <TextInput
-                  value={name}
-                  onChangeText={(text) => {
-                    setName(text);
-                    setIsNameChanged(true); // Set isNameChanged to true when the name is changed
-                  }}
-                  style={{ fontSize: 18 }}
-                />
-              </View>
-              {isNameChanged && (
-                <View style={{ flexDirection: "row", gap: 10 }}>
-                  <TouchableOpacity
-                    onPress={updateName}
-                    style={{
-                      marginTop: "auto",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 15,
-                      width: 100,
-                      backgroundColor: "#1adf13",
-                      borderRadius: 25,
-                      justifyContent: "center",
-                      padding: 5,
-                    }}
-                  >
-                    <Text style={{ color: "black" }}>Save</Text>
-                    <Entypo name="check" size={20} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={cancelNameChange}
-                    style={{
-                      marginTop: "auto",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 15,
-                      width: 100,
-                      backgroundColor: "#ff4d4d",
-                      borderRadius: 25,
-                      justifyContent: "center",
-                      padding: 5,
-                    }}
-                  >
-                    <Text style={{ color: "black" }}>Cancel</Text>
-                    <Entypo name="cross" size={20} color="black" />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          </View>
-          <View>
-            <View style={{ flexDirection: "column", marginBottom: 6 }}>
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>Email</Text>
-              <View
+                <Text style={{ color: "black" }}>Save</Text>
+                <Entypo name="check" size={20} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={cancelEmailChange}
                 style={{
-                  height: 50,
-                  width: "100%",
-                  backgroundColor: "white",
-                  borderRadius: 10,
+                  marginTop: "auto",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 15,
+                  width: 100,
+                  backgroundColor: "#ff4d4d",
+                  borderRadius: 25,
                   justifyContent: "center",
-                  borderWidth: 1,
-                  borderColor: "gray",
-                  marginVertical: 6,
-                  paddingLeft: 8,
+                  padding: 5,
                 }}
               >
-                <TextInput
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    setIsEmailChanged(true);
-                  }}
-                  style={{ fontSize: 18 }}
-                />
-              </View>
-              {isEmailChanged && (
-                <View style={{ flexDirection: "row", gap: 10 }}>
-                  <TouchableOpacity
-                    onPress={updateEmail}
-                    style={{
-                      marginTop: "auto",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 15,
-                      width: 100,
-                      backgroundColor: "#1adf13",
-                      borderRadius: 25,
-                      justifyContent: "center",
-                      padding: 5,
-                    }}
-                  >
-                    <Text style={{ color: "black" }}>Save</Text>
-                    <Entypo name="check" size={20} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={cancelEmailChange}
-                    style={{
-                      marginTop: "auto",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 15,
-                      width: 100,
-                      backgroundColor: "#ff4d4d",
-                      borderRadius: 25,
-                      justifyContent: "center",
-                      padding: 5,
-                    }}
-                  >
-                    <Text style={{ color: "black" }}>Cancel</Text>
-                    <Entypo name="cross" size={20} color="black" />
-                  </TouchableOpacity>
-                </View>
-              )}
+                <Text style={{ color: "black" }}>Cancel</Text>
+                <Entypo name="cross" size={20} color="black" />
+              </TouchableOpacity>
             </View>
+          )}
+        </View>
+
+        <View style={{ flexDirection: "column", marginBottom: 6 }}>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Age</Text>
+          <View
+            style={{
+              height: 50,
+              width: "100%",
+              backgroundColor: "white",
+              borderRadius: 10,
+              justifyContent: "center",
+              borderWidth: 1,
+              borderColor: "gray",
+              marginVertical: 6,
+              paddingLeft: 8,
+            }}
+          >
+            <TextInput
+              value={age}
+              editable={false}
+              style={{ fontSize: 18, color: "gray" }}
+            />
           </View>
-          <View>
-            <View style={{ flexDirection: "column", marginBottom: 6 }}>
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>Age</Text>
-              <View
-                style={{
-                  height: 50,
-                  width: "100%",
-                  backgroundColor: "white",
-                  borderRadius: 10,
-                  justifyContent: "center",
-                  borderWidth: 1,
-                  borderColor: "gray",
-                  marginVertical: 6,
-                  paddingLeft: 8,
-                }}
-              >
-                <TextInput
-                  value={age}
-                  editable={false}
-                  style={{ fontSize: 18, color: "gray" }}
-                />
-              </View>
-            </View>
+        </View>
+        <View style={{ flexDirection: "column", marginBottom: 6 }}>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Gender</Text>
+          <View
+            style={{
+              height: 50,
+              width: "100%",
+              backgroundColor: "white",
+              borderRadius: 10,
+              justifyContent: "center",
+              borderWidth: 1,
+              borderColor: "gray",
+              marginVertical: 6,
+              paddingLeft: 8,
+              marginBottom: 20,
+            }}
+          >
+            <TextInput
+              value={gender}
+              editable={false}
+              style={{ fontSize: 18, color: "gray" }}
+            />
           </View>
-          <View>
-            <View style={{ flexDirection: "column", marginBottom: 6 }}>
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>Gender</Text>
-              <View
-                style={{
-                  height: 50,
-                  width: "100%",
-                  backgroundColor: "white",
-                  borderRadius: 10,
-                  justifyContent: "center",
-                  borderWidth: 1,
-                  borderColor: "gray",
-                  marginVertical: 6,
-                  paddingLeft: 8,
-                }}
-              >
-                <TextInput
-                  value={gender}
-                  editable={false}
-                  style={{ fontSize: 18, color: "gray" }}
-                />
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
+      <View></View>
     </SafeAreaView>
   );
 };

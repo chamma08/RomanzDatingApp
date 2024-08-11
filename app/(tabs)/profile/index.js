@@ -91,7 +91,7 @@ const index = () => {
         sliderWidth={wp(105)}
         firstItem={1}
         autoplayInterval={5000}
-        itemWidth={wp(100) - 70}
+        itemWidth={wp(100) - 60}
         slideStyle={{ display: "flex", alignItems: "center",marginTop: 20,marginBottom: 20 }}
       />
       </View>

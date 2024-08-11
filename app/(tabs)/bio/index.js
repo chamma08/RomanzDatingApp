@@ -321,13 +321,13 @@ const index = () => {
           </View>
         </View>
 
-        <View style={{ marginBottom: 20 }}>
+        <View style={{ marginBottom: 10 }}>
           <Slider />
         </View>
 
         <View
           style={{
-            padding: 10,
+            padding: 5,
           }}
         >
           <Text
@@ -341,7 +341,7 @@ const index = () => {
             Discover Love{" "}
             <Text
               style={{
-                fontSize: 26,
+                fontSize: 27,
                 color: "#ff0063",
                 fontWeight: "bold",
               }}
@@ -353,7 +353,7 @@ const index = () => {
           <LottieView
             source={require("../../../assets/animations/love.json")}
             style={{
-              height: 180,
+              height: 120,
               width: 350,
               alignSelf: "center",
               justifyContent: "center",
