@@ -26,7 +26,7 @@ const chatRoom = ({receiverId}) => {
   const [profile, setProfile] = useState({});
   const [userId, setUserId] = useState(null);
   const [image, setImage] = useState(null);
-  const socket = io("https://romanz-dating-app.vercel.app/");
+  const socket = io("https://romanz-dating-app.vercel.app");
 
 
   

@@ -678,10 +678,9 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(port, () => {
-  console.log(`Server is running on ${port}`);
+http.listen(8000, () => {
+  console.log("Socket.IO server running on port 8000");
 });
-
 
 app.get("/messages", async (req, res) => {
   try {
