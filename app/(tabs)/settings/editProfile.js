@@ -276,6 +276,8 @@ const editProfile = ({}) => {
             style={{
               position: "absolute",
               left: 0,
+              backgroundColor: "white",
+              borderRadius: 50,
             }}
           >
             <MaterialIcons name="keyboard-arrow-left" size={50} color="black" />

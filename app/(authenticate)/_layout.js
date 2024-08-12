@@ -9,6 +9,7 @@ export default function Layout() {
         <Stack.Screen name="register" />
         <Stack.Screen name="select" />
         <Stack.Screen name="type" />
+        <Stack.Screen name="subscription" />
       </Stack>
     </>
   );
