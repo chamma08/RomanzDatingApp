@@ -16,6 +16,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import LottieView from "lottie-react-native";
@@ -53,13 +54,26 @@ const login = () => {
         const token = response.data.token;
         AsyncStorage.setItem("auth", token);
 
-        if (!steps.step1) {
-          router.replace("/(authenticate)/select");
-        } else if (!steps.step2) {
-          router.replace("/(authenticate)/subscription");
-        } else {
-          router.replace("/(tabs)/profile");
-        }
+        // Decode token to get userId
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+
+        // Fetch user data to check step completion
+        axios
+          .get(`https://romanz-dating-app.vercel.app/users/${userId}`)
+          .then((res) => {
+            const user = res.data;
+            if (user.step2) {
+              router.replace("/(tabs)/profile");
+            } else if (user.step1) {
+              router.replace("(authenticate)/subscription");
+            } else {
+              router.replace("(authenticate)/select");
+            }
+          })
+          .catch((error) => {
+            console.log("Failed to fetch user data", error);
+          });
       })
       .catch((error) => {
         Alert.alert("Login Error", "An error occurred while logging in");
