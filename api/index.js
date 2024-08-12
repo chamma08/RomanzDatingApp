@@ -287,7 +287,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/complete-step", async (req, res) => {
+/* app.post("/complete-step", async (req, res) => {
   try {
     const { userId, stepNumber } = req.body;
     const update = {};
@@ -298,7 +298,7 @@ app.post("/complete-step", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Step update failed" });
   }
-});
+}); */
 
 //endpoint to change or select the gender for a particular user profile
 app.put("/users/:userId/gender", async (req, res) => {
