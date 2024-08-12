@@ -17,7 +17,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 import LottieView from "lottie-react-native";
 
 const { width, height } = Dimensions.get("window");
@@ -46,12 +46,20 @@ const login = () => {
       email: email,
       password: password,
     };
-    axios.post("https://romanz-dating-app.vercel.app/login", user)
+    axios
+      .post("https://romanz-dating-app.vercel.app/login", user)
       .then((response) => {
         console.log(response);
         const token = response.data.token;
         AsyncStorage.setItem("auth", token);
-        router.replace("/(authenticate)/select");
+
+        if (!steps.step1) {
+          router.replace("/(authenticate)/select");
+        } else if (!steps.step2) {
+          router.replace("/(authenticate)/subscription");
+        } else {
+          router.replace("/(tabs)/profile");
+        }
       })
       .catch((error) => {
         Alert.alert("Login Error", "An error occurred while logging in");
@@ -61,27 +69,24 @@ const login = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient
-        colors={['#FF635C', '#FF3974']}
-        style={styles.gradient}
-      >
+      <LinearGradient colors={["#FF635C", "#FF3974"]} style={styles.gradient}>
         <View style={styles.imageContainer}>
           <Image
             style={styles.logo}
             source={{
-              uri: 'https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/Romanzu%20Logo.png?alt=media&token=ef5a5884-c55b-4596-908f-8ab0254ce8fc',
+              uri: "https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/Romanzu%20Logo.png?alt=media&token=ef5a5884-c55b-4596-908f-8ab0254ce8fc",
             }}
           />
         </View>
       </LinearGradient>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
       >
         <View style={styles.lottieViewContainer}>
           <LottieView
-            source={require('../../assets/animations/login.json')}
+            source={require("../../assets/animations/login.json")}
             style={styles.lottieView}
             autoPlay
             loop={true}
@@ -122,9 +127,13 @@ const login = () => {
             <Text style={styles.loginButtonText}>Login</Text>
           </Pressable>
 
-          <Pressable onPress={() => router.replace("/register")} style={styles.registerLink}>
+          <Pressable
+            onPress={() => router.replace("/register")}
+            style={styles.registerLink}
+          >
             <Text style={styles.registerText}>
-              Don't have an account? <Text style={styles.registerTextBold}>Register</Text>
+              Don't have an account?{" "}
+              <Text style={styles.registerTextBold}>Register</Text>
             </Text>
           </Pressable>
         </View>
@@ -141,39 +150,39 @@ const styles = StyleSheet.create({
   },
   gradient: {
     height: height * 0.25,
-    width: '100%',
+    width: "100%",
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   imageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 20,
   },
   logo: {
     width: width * 0.9,
     height: height * 0.25,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     borderRadius: 50,
   },
   keyboardAvoidingView: {
     flex: 1,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     padding: 20,
   },
   lottieViewContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   lottieView: {
     height: height * 0.2,
     width: width * 0.9,
   },
   formContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginTop: 20,
   },
   inputContainer: {
@@ -184,18 +193,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 20,
     marginVertical: 10,
-    width: '90%',
+    width: "90%",
   },
   input: {
     color: "white",
-    width: '85%',
+    width: "85%",
     fontSize: 17,
     marginLeft: 10,
   },
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: '90%',
+    width: "90%",
     marginTop: 12,
   },
   footerText: {
@@ -206,7 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   loginButton: {
-    width: '80%',
+    width: "80%",
     backgroundColor: "#ff9200",
     borderRadius: 6,
     padding: 15,

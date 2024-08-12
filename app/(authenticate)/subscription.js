@@ -1,4 +1,5 @@
 import {
+  Alert,
   ImageBackground,
   Pressable,
   SafeAreaView,
@@ -7,10 +8,49 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import "core-js/stable/atob";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const subscription = () => {
+  const router = useRouter();
+  const [option, setOption] = useState("free");
+  const [userId, setUserId] = useState("");
   const [value, setValue] = React.useState(0);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("auth");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+    };
+
+    fetchUser();
+  }, []);
+
+  const updateUserSubscription = async () => {
+    try {
+      const response = await axios.put(
+        `http://192.168.8.189:3000/users/${userId}/subscription`,
+        {
+          subscription: option,
+        }
+      );
+
+      console.log(response.data);
+
+      if (response.status == 200) {
+        router.replace("(tabs)/profile");
+      }
+    } catch (error) {
+      console.log("error", error);
+      Alert.alert("Error", "An error occurred. Please try again.");
+    }
+  };
 
   const items = [
     {
@@ -53,6 +93,7 @@ const subscription = () => {
                 key={index}
                 onPress={() => {
                   setValue(index);
+                  setOption(label.toLowerCase());
                 }}
               >
                 <View style={[styles.radio, isActive && styles.radioActive]}>
@@ -77,7 +118,7 @@ const subscription = () => {
           })}
 
           <Pressable
-            onPress={() => router.replace("(tabs)/profile")}
+            onPress={updateUserSubscription}
             style={styles.nextButton}
           >
             <Text style={styles.nextButtonText}>Next</Text>

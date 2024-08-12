@@ -172,7 +172,7 @@ const type = () => {
             ))}
           </View>
           <Pressable
-            onPress={() => router.replace("(tabs)/profile")}
+            onPress={() => router.replace("(authenticate)/subscription")}
           style={{
             marginTop: 35,
             marginBottom: 30,

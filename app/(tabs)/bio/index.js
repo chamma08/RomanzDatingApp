@@ -115,6 +115,7 @@ const index = () => {
       setSelectedTurnOns(user.user?.turnOns);
       setLookingOptions(user?.user.lookingFor);
       setGender(user?.user?.gender);
+      
     } catch (error) {
       console.log("Error fetching user description", error);
     }

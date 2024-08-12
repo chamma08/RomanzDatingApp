@@ -4,10 +4,10 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
-require('dotenv').config();
+require("dotenv").config();
 
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
 
 const app = express();
 const port = 3000;
@@ -16,12 +16,13 @@ const cors = require("cors");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
-app.use(cors(  {
-  origin: 'https://romanz-dating-app.vercel.app/',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}  
-));
+app.use(
+  cors({
+    origin: "https://romanz-dating-app.vercel.app/",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 mongoose
   .connect("mongodb+srv://romanzu:romanzu@cluster0.hrd19zs.mongodb.net/")
@@ -36,25 +37,22 @@ app.listen(port, () => {
   console.log("Server is running on 3000");
 });
 
-app.get('/', (req, res) =>
-  
-  res.send('Hello World!'));
+app.get("/", (req, res) => res.send("Hello World!"));
 
-require('dotenv').config();
+require("dotenv").config();
 
 const firebaseConfig = {
   projectId: process.env.FIREBASE_PROJECT_ID,
   privateKeyId: process.env.FIREBASE_PRIVATE_KEY_ID,
-  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
   clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
   clientId: process.env.FIREBASE_CLIENT_ID,
   authUri: process.env.FIREBASE_AUTH_URI,
   tokenUri: process.env.FIREBASE_TOKEN_URI,
   authProviderX509CertUrl: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
   clientX509CertUrl: process.env.FIREBASE_CLIENT_X509_CERT_URL,
-  universeDomain: process.env.FIREBASE_UNIVERSE_DOMAIN
+  universeDomain: process.env.FIREBASE_UNIVERSE_DOMAIN,
 };
-
 
 //const serviceAccount = require("C:/Users/User/Desktop/RomanzDatingApp/api/key.json");
 
@@ -65,14 +63,13 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/user");
 const Chat = require("./models/message");
 
-const admin = require('firebase-admin');
-const fs = require('fs');
+const admin = require("firebase-admin");
+const fs = require("fs");
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
-  storageBucket: 'mern-blog-19722.appspot.com',
+  storageBucket: "mern-blog-19722.appspot.com",
 });
-
 
 const bucket = admin.storage().bucket();
 
@@ -83,8 +80,6 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 20 * 1024 * 1024 }, // 10 MB limit
 });
-
-
 
 /* app.put('/users/:userId/profile-images', upload.single('profilePicture'), async (req, res) => {
   console.log('File:', req.file);  // Log the file object
@@ -137,39 +132,41 @@ const upload = multer({
 });
  */
 
-app.put('/users/:userId/profile-images', async (req, res) => {
+app.put("/users/:userId/profile-images", async (req, res) => {
   const { userId } = req.params;
   const { profilePictureUrl } = req.body;
 
   if (!profilePictureUrl) {
-    return res.status(400).send({ success: false, message: 'No URL provided' });
+    return res.status(400).send({ success: false, message: "No URL provided" });
   }
 
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .send({ success: false, message: "User not found" });
     }
 
     user.profilePicture = profilePictureUrl;
     await user.save();
-    res.send({ success: true, message: 'Profile image updated', profilePictureUrl });
+    res.send({
+      success: true,
+      message: "Profile image updated",
+      profilePictureUrl,
+    });
   } catch (error) {
-    console.error('Error updating user profile:', error);
-    res.status(500).send({ success: false, message: 'Error updating user profile' });
+    console.error("Error updating user profile:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error updating user profile" });
   }
 });
-
-
-
-
-
-
 
 //endpoint to register a user to the backend
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, password,age } = req.body;
+    const { name, email, password, age } = req.body;
 
     //check if the email is already registered
     const existingUser = await User.findOne({ email });
@@ -276,9 +273,30 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, secretKey);
 
-    res.status(200).json({ token });
+    res.status(200).json({
+      token,
+      steps: {
+        step1: user.step1,
+        step2: user.step2,
+        step3: user.step3,
+        step4: user.step4,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "login failed" });
+  }
+});
+
+app.post("/complete-step", async (req, res) => {
+  try {
+    const { userId, stepNumber } = req.body;
+    const update = {};
+    update[`step${stepNumber}`] = true;
+
+    await User.updateOne({ _id: userId }, update);
+    res.status(200).json({ message: "Step updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Step update failed" });
   }
 });
 
@@ -290,7 +308,7 @@ app.put("/users/:userId/gender", async (req, res) => {
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { gender: gender },
+      { gender: gender, step1: true },
       { new: true }
     );
 
@@ -312,7 +330,7 @@ app.put("/users/:userId/subscription", async (req, res) => {
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { subscription: subscription },
+      { subscription: subscription, step2: true },
       { new: true }
     );
 
@@ -320,13 +338,15 @@ app.put("/users/:userId/subscription", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json({ message: "User subscription updated Succesfully" });
+    return res
+      .status(200)
+      .json({ message: "User subscription updated Succesfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error updating user subscription", error });
+    res
+      .status(500)
+      .json({ message: "Error updating user subscription", error });
   }
 });
-
-
 
 //endpoint to update the user description
 app.put("/users/:userId/description", async (req, res) => {
@@ -392,9 +412,7 @@ app.put("/users/:userId/name", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res
-      .status(200)
-      .json({ message: "User name updated succesfully" });
+    return res.status(200).json({ message: "User name updated succesfully" });
   } catch (error) {
     res.status(500).json({ message: "Error updating user name" });
   }
@@ -417,9 +435,7 @@ app.put("/users/:userId/email", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res
-      .status(200)
-      .json({ message: "User email updated succesfully" });
+    return res.status(200).json({ message: "User email updated succesfully" });
   } catch (error) {
     res.status(500).json({ message: "Error updating user email" });
   }
@@ -543,14 +559,9 @@ app.put("/users/:userId/looking-for/remove", async (req, res) => {
   }
 });
 
-
-
-
-
-
 //endpoint to fetch all the profiles for a particular user
 app.get("/profiles", async (req, res) => {
-  const { userId, gender, turnOns, lookingFor,age } = req.query;
+  const { userId, gender, turnOns, lookingFor, age } = req.query;
 
   try {
     let filter = { gender: gender === "male" ? "female" : "male" }; // For gender filtering
@@ -725,23 +736,22 @@ app.get("/messages", async (req, res) => {
   }
 });
 
-
 //endpoint to delete the messages;
 
-app.post("/delete",async(req,res) => {
-    try{
-        const {messages} = req.body;
+app.post("/delete", async (req, res) => {
+  try {
+    const { messages } = req.body;
 
-        if(!Array.isArray(messages) || messages.length == 0){
-            return res.status(400).json({message:"Invalid request body"})
-        };
-
-        for(const messageId of messages){
-            await Chat.findByIdAndDelete(messageId);
-        }
-
-        res.status(200).json({message:"Messages delted successfully!"})
-    } catch(error){
-        res.status(500).json({message:"Internal server error",error})
+    if (!Array.isArray(messages) || messages.length == 0) {
+      return res.status(400).json({ message: "Invalid request body" });
     }
-})
+
+    for (const messageId of messages) {
+      await Chat.findByIdAndDelete(messageId);
+    }
+
+    res.status(200).json({ message: "Messages delted successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error", error });
+  }
+});
