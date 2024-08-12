@@ -34,14 +34,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  step3: {
-    type: Boolean,
-    default: false,
-  },
-  step4: {
-    type: Boolean,
-    default: false,
-  },
   subscription: {
     type: String,
     enum: ["free", "plus", "premium"],

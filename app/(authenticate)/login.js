@@ -17,6 +17,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
+import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import LottieView from "lottie-react-native";
@@ -33,52 +34,55 @@ const login = () => {
       try {
         const token = await AsyncStorage.getItem("auth");
         if (token) {
-          router.replace("/(tabs)/profile");
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.userId;
+          const response = await axios.get(`https://romanz-dating-app.vercel.app/users/${userId}`);
+          const user = response.data;
+          if (user.step2) {
+            router.replace("/(tabs)/profile");
+          } else if (user.step1) {
+            router.replace("(authenticate)/subscription");
+          } else {
+            router.replace("(authenticate)/select");
+          }
         }
       } catch (error) {
-        console.log("Error", error);
+        console.log("Error checking login status", error);
       }
     };
     checkLoginStatus();
-  }, []);
+  }, [router]);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const user = {
-      email: email,
-      password: password,
+      email,
+      password,
     };
-    axios
-      .post("https://romanz-dating-app.vercel.app/login", user)
-      .then((response) => {
-        console.log(response);
-        const token = response.data.token;
-        AsyncStorage.setItem("auth", token);
+    try {
+      const response = await axios.post("https://romanz-dating-app.vercel.app/login", user);
+      console.log(response);
+      const token = response.data.token;
+      await AsyncStorage.setItem("auth", token);
 
-        // Decode token to get userId
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.userId;
+      // Decode token to get userId
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
 
-        // Fetch user data to check step completion
-        axios
-          .get(`https://romanz-dating-app.vercel.app/users/${userId}`)
-          .then((res) => {
-            const user = res.data;
-            if (user.step2) {
-              router.replace("/(tabs)/profile");
-            } else if (user.step1) {
-              router.replace("(authenticate)/subscription");
-            } else {
-              router.replace("(authenticate)/select");
-            }
-          })
-          .catch((error) => {
-            console.log("Failed to fetch user data", error);
-          });
-      })
-      .catch((error) => {
-        Alert.alert("Login Error", "An error occurred while logging in");
-        console.log("Login failed", error);
-      });
+      // Fetch user data to check step completion
+      const userResponse = await axios.get(`https://romanz-dating-app.vercel.app/users/${userId}`);
+      const userData = userResponse.data;
+
+      if (userData.step2) {
+        router.replace("/(tabs)/profile");
+      } else if (userData.step1) {
+        router.replace("(authenticate)/subscription");
+      } else {
+        router.replace("(authenticate)/select");
+      }
+    } catch (error) {
+      Alert.alert("Login Error", "An error occurred while logging in");
+      console.log("Login failed", error);
+    }
   };
 
   return (
