@@ -239,9 +239,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   registerButton: {
-    width: '80%',
+    width: '40%',
     backgroundColor: '#ff9200',
-    borderRadius: 6,
+    borderRadius: 40,
     alignSelf: 'center',
     padding: 10,
     marginTop: 20,

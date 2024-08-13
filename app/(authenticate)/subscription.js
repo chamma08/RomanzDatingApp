@@ -35,7 +35,7 @@ const subscription = () => {
   const updateUserSubscription = async () => {
     try {
       const response = await axios.put(
-        `http://192.168.8.189:3000/users/${userId}/subscription`,
+        `https://romanz-dating-app.vercel.app/users/${userId}/subscription`,
         {
           subscription: option,
         }

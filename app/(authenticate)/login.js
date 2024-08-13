@@ -58,23 +58,21 @@ const login = () => {
       email,
       password,
     };
+  
     try {
       const response = await axios.post("https://romanz-dating-app.vercel.app/login", user);
       console.log(response);
-      const token = response.data.token;
+      const { token, steps } = response.data;
+  
       await AsyncStorage.setItem("auth", token);
 
-      // Decode token to get userId
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.userId;
+      console.log("User steps:", steps);
 
-      // Fetch user data to check step completion
-      const userResponse = await axios.get(`https://romanz-dating-app.vercel.app/users/${userId}`);
-      const userData = userResponse.data;
-
-      if (userData.step2) {
+  
+      // Check steps and route accordingly
+      if (steps.step2) {
         router.replace("/(tabs)/profile");
-      } else if (userData.step1) {
+      } else if (steps.step1) {
         router.replace("(authenticate)/subscription");
       } else {
         router.replace("(authenticate)/select");
@@ -233,10 +231,10 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   loginButton: {
-    width: "80%",
+    width: "35%",
     backgroundColor: "#ff9200",
-    borderRadius: 6,
-    padding: 15,
+    borderRadius: 40,
+    padding: 10,
     marginTop: 40,
   },
   loginButtonText: {

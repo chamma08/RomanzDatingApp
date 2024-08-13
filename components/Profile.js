@@ -51,6 +51,7 @@ const Profile = ({ item, userId,setProfiles }) => {
                     justifyContent: "center",
                     alignItems: "center",
                     marginTop: 10,
+                    /* backgroundColor: "white", */
                   }}
                 >
                   <Animatable.View
@@ -70,6 +71,16 @@ const Profile = ({ item, userId,setProfiles }) => {
                     borderRadius: 25,
                     justifyContent: "center",
                     alignItems: "center",
+                    /* backgroundColor: "white",
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5, */
+                    marginTop: 10,
                   }}
                 >
                   <AntDesign name="hearto" size={37} color="#FF033E" />
