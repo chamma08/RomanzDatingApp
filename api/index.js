@@ -348,6 +348,32 @@ app.put("/users/:userId/subscription", async (req, res) => {
   }
 });
 
+//endpoint to change or select user location for a particular user profile
+app.put("/users/:userId/location", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { location } = req.body;
+
+    const user = await User.findByIdAndUpdate
+    (
+      userId,
+      { location: location },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "User location updated Succesfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating user location", error });
+  }
+});
+  
+
 //endpoint to update the user description
 app.put("/users/:userId/description", async (req, res) => {
   try {

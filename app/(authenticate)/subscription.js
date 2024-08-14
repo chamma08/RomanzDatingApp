@@ -3,6 +3,7 @@ import {
   ImageBackground,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -76,54 +77,56 @@ const subscription = () => {
         "Enjoy all features including priority matches and profile boosts",
     },
   ];
+
   return (
-    <ImageBackground 
-      source={{uri: "https://firebasestorage.googleapis.com/v0/b/mern-blog-19722.appspot.com/o/bg1.jpg?alt=media&token=baf261fe-33d5-40fb-94bc-fc3c8987f36a"}}
+    <ImageBackground
+      source={{
+        uri: "https://firebasestorage.googleapis.com/v0/b/mern-blog-19722.appspot.com/o/bg1.jpg?alt=media&token=baf261fe-33d5-40fb-94bc-fc3c8987f36a",
+      }}
       resizeMode="cover"
       style={{ flex: 1 }}
     >
-      {/* Adding an overlay */}
       <View style={styles.overlay}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Pick your plan</Text>
-          {items.map(({ label, price, badge, description }, index) => {
-            const isActive = value === index;
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  setValue(index);
-                  setOption(label.toLowerCase());
-                }}
-              >
-                <View style={[styles.radio, isActive && styles.radioActive]}>
-                  <Text style={styles.radioLabel}>{label}</Text>
-                  <Text style={styles.radioPrice}>
-                    ${price}
-                    /month
-                  </Text>
-                  <View style={styles.radioBadge}>
-                    <Text style={styles.radioBadgeText}>{badge}</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.container}>
+            <Text style={styles.title}>Pick your plan</Text>
+            {items.map(({ label, price, badge, description }, index) => {
+              const isActive = value === index;
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    setValue(index);
+                    setOption(label.toLowerCase());
+                  }}
+                >
+                  <View style={[styles.radio, isActive && styles.radioActive]}>
+                    <Text style={styles.radioLabel}>{label}</Text>
+                    <Text style={styles.radioPrice}>
+                      ${price}/month
+                    </Text>
+                    <View style={styles.radioBadge}>
+                      <Text style={styles.radioBadgeText}>{badge}</Text>
+                    </View>
+                    <Text style={styles.radioDescription}>
+                      {description}
+                    </Text>
+                    <View
+                      style={[
+                        styles.radioInput,
+                        isActive && styles.radioInputActive,
+                      ]}
+                    />
                   </View>
-                  <Text style={styles.radioDescription}>{description}</Text>
-                  <View
-                    style={[
-                      styles.radioInput,
-                      isActive && styles.radioInputActive,
-                    ]}
-                  />
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                </TouchableOpacity>
+              );
+            })}
 
-          <Pressable
-            onPress={updateUserSubscription}
-            style={styles.nextButton}
-          >
-            <Text style={styles.nextButtonText}>Next</Text>
-          </Pressable>
-        </View>
+            <Pressable onPress={updateUserSubscription} style={styles.nextButton}>
+              <Text style={styles.nextButtonText}>Next</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
       </View>
     </ImageBackground>
   );
@@ -134,7 +137,12 @@ export default subscription;
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark overlay for better contrast
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center", // Center content vertically
+    paddingBottom: 50, // Add some padding to the bottom for small screens
   },
   container: {
     padding: 24,
@@ -144,9 +152,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "white",
     marginBottom: 12,
-    textAlign: 'center', // Center the title
+    textAlign: "center",
   },
-  /** Radio */
   radio: {
     position: "relative",
     backgroundColor: "#fff",

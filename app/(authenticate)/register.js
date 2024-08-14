@@ -105,23 +105,23 @@ const Register = () => {
 
           <View style={styles.inputContainer}>
             <View style={styles.inputWrapper}>
-              <Ionicons style={styles.icon} name="person-sharp" size={24} color="white" />
+              <Ionicons style={styles.icon} name="person-sharp" size={24} color="#6a6a6a" />
               <TextInput
                 value={name}
                 onChangeText={(text) => setName(text)}
                 placeholder="Enter your name"
-                placeholderTextColor={"white"}
+                placeholderTextColor={"#c8c8c8"}
                 style={styles.input}
               />
             </View>
 
             <View style={styles.inputWrapper}>
-              <Ionicons style={styles.icon} name="finger-print" size={24} color="white" />
+              <Ionicons style={styles.icon} name="finger-print" size={24} color="#6a6a6a" />
               <TextInput
                 value={age}
                 onChangeText={handleAgeChange}
                 placeholder="Enter your age"
-                placeholderTextColor={"white"}
+                placeholderTextColor={"#c8c8c8"}
                 keyboardType="numeric"
                 maxLength={2}
                 style={styles.input}
@@ -129,31 +129,45 @@ const Register = () => {
             </View>
 
             <View style={styles.inputWrapper}>
-              <MaterialIcons style={styles.icon} name="email" size={24} color="white" />
+              <MaterialIcons style={styles.icon} name="email" size={24} color="#6a6a6a" />
               <TextInput
                 value={email}
                 onChangeText={(text) => setEmail(text)}
                 placeholder="Enter your email"
-                placeholderTextColor={"white"}
+                placeholderTextColor={"#c8c8c8"}
                 style={styles.input}
               />
             </View>
 
             <View style={styles.inputWrapper}>
-              <AntDesign style={styles.icon} name="lock1" size={24} color="white" />
+              <AntDesign style={styles.icon} name="lock1" size={24} color="#6a6a6a" />
               <TextInput
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry={true}
                 placeholder="Enter your password"
                 style={styles.input}
-                placeholderTextColor="white"
+                placeholderTextColor="#c8c8c8"
               />
             </View>
 
-            <Pressable onPress={handleRegister} style={styles.registerButton}>
+            <LinearGradient
+            colors={["#ff0063","#ff8b8b" ]} // Define your gradient colors here
+            start={{ x: 0, y: 0 }} // Starting point of the gradient (top-left corner)
+            end={{ x: 1, y: 1 }} // Ending point of the gradient (bottom-right corner)
+            style={styles.registerButton} // Apply the loginButton style to the gradient
+          >
+            <Pressable
+              onPress={handleRegister}
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Text style={styles.registerButtonText}>Register</Text>
             </Pressable>
+          </LinearGradient>
 
             <Pressable onPress={() => router.replace("/login")} style={styles.loginLink}>
               <Text style={styles.loginText}>
@@ -223,7 +237,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#db2b64',
+    backgroundColor: '#ebebeb',
     paddingVertical: 10,
     borderRadius: 20,
     marginBottom: 15,
@@ -232,7 +246,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   input: {
-    color: 'white',
+    color: 'black',
     flex: 1,
     marginVertical: 10,
     fontSize: 17,
@@ -254,6 +268,7 @@ const styles = StyleSheet.create({
   },
   loginLink: {
     marginTop: 12,
+    marginBottom: 20,
   },
   loginText: {
     textAlign: 'center',

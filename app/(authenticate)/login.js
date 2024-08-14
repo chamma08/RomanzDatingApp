@@ -16,7 +16,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
@@ -36,7 +36,9 @@ const login = () => {
         if (token) {
           const decodedToken = jwtDecode(token);
           const userId = decodedToken.userId;
-          const response = await axios.get(`https://romanz-dating-app.vercel.app/users/${userId}`);
+          const response = await axios.get(
+            `https://romanz-dating-app.vercel.app/users/${userId}`
+          );
           const user = response.data;
           if (user.step2) {
             router.replace("/(tabs)/profile");
@@ -58,17 +60,19 @@ const login = () => {
       email,
       password,
     };
-  
+
     try {
-      const response = await axios.post("https://romanz-dating-app.vercel.app/login", user);
+      const response = await axios.post(
+        "https://romanz-dating-app.vercel.app/login",
+        user
+      );
       console.log(response);
       const { token, steps } = response.data;
-  
+
       await AsyncStorage.setItem("auth", token);
 
       console.log("User steps:", steps);
 
-  
       // Check steps and route accordingly
       if (steps.step2) {
         router.replace("/(tabs)/profile");
@@ -112,24 +116,24 @@ const login = () => {
 
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
-            <MaterialIcons name="email" size={24} color="white" />
+            <MaterialIcons name="email" size={24} color="#6a6a6a" />
             <TextInput
               value={email}
               onChangeText={(text) => setEmail(text)}
               placeholder="Enter your email"
-              placeholderTextColor="white"
+              placeholderTextColor="#c8c8c8"
               style={styles.input}
             />
           </View>
 
           <View style={styles.inputContainer}>
-            <AntDesign name="lock1" size={24} color="white" />
+            <AntDesign name="lock1" size={24} color="#6a6a6a" />
             <TextInput
               value={password}
               onChangeText={(text) => setPassword(text)}
               secureTextEntry={true}
               placeholder="Enter your password"
-              placeholderTextColor="white"
+              placeholderTextColor="#c8c8c8"
               style={styles.input}
             />
           </View>
@@ -139,9 +143,23 @@ const login = () => {
             <Text style={styles.forgotPassword}>Forgot Password</Text>
           </View>
 
-          <Pressable onPress={handleLogin} style={styles.loginButton}>
-            <Text style={styles.loginButtonText}>Login</Text>
-          </Pressable>
+          <LinearGradient
+            colors={["#ff0063","#ff8b8b" ]} // Define your gradient colors here
+            start={{ x: 0, y: 0 }} // Starting point of the gradient (top-left corner)
+            end={{ x: 1, y: 1 }} // Ending point of the gradient (bottom-right corner)
+            style={styles.loginButton} // Apply the loginButton style to the gradient
+          >
+            <Pressable
+              onPress={handleLogin}
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.loginButtonText}>Login</Text>
+            </Pressable>
+          </LinearGradient>
 
           <Pressable
             onPress={() => router.replace("/register")}
@@ -200,11 +218,12 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     marginTop: 20,
+    height: 800,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#db2b64",
+    backgroundColor: "#ebebeb",
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 20,
@@ -212,7 +231,7 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   input: {
-    color: "white",
+    color: "black",
     width: "85%",
     fontSize: 17,
     marginLeft: 10,
@@ -232,10 +251,10 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     width: "35%",
-    backgroundColor: "#ff9200",
     borderRadius: 40,
     padding: 10,
     marginTop: 40,
+    height: 45,
   },
   loginButtonText: {
     textAlign: "center",
