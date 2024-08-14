@@ -39,7 +39,7 @@ const select = () => {
       console.log(response.data);
 
       if (response.status == 200) {
-        router.replace("(authenticate)/type");
+        router.replace("(authenticate)/location");
       }
     } catch (error) {
       console.log("error", error);

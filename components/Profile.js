@@ -37,8 +37,23 @@ const Profile = ({ item, userId,setProfiles }) => {
     }
   };
 
+  const handleRemove = async (selectedUserId) => {
+    try {
+      await axios.post("https://romanz-dating-app.vercel.app/send-remove", {
+        currentUserId: userId,
+        selectedUserId: selectedUserId,
+      });
+
+      setProfiles((prevProfiles) =>
+        prevProfiles.filter((profile) => profile._id !== selectedUserId)
+      );
+    } catch (error) {
+      console.log("error removing", error);
+    }
+  }
+
   return (
-    <View className="flex-1 relative">
+    <View className="flex-1 relative mt-3">
       <View
               style={{ flexDirection: "row", alignItems: "center", gap: 20 }}
             >
@@ -71,7 +86,7 @@ const Profile = ({ item, userId,setProfiles }) => {
                     borderRadius: 25,
                     justifyContent: "center",
                     alignItems: "center",
-                    /* backgroundColor: "white",
+                    backgroundColor: "#ff00a3",
                     shadowColor: "#000",
                     shadowOffset: {
                       width: 0,
@@ -79,13 +94,80 @@ const Profile = ({ item, userId,setProfiles }) => {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
-                    elevation: 5, */
+                    elevation: 5,
                     marginTop: 10,
                   }}
                 >
-                  <AntDesign name="hearto" size={37} color="#FF033E" />
+                  <AntDesign name="heart" size={37} color="white" />
                 </Pressable>
               )}
+
+              <Pressable
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#9300cc",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                  elevation: 5,
+                  marginTop: 10,
+                }}
+              >
+                <FontAwesome name="star" size={37} color="white" />
+              </Pressable>
+
+              <Pressable
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#ece200",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                  elevation: 5,
+                  marginTop: 10,
+                }}
+              >
+                <Entypo name="block" size={37} color="white" />
+              </Pressable>
+
+              <Pressable
+                onPress={() => handleRemove(item?._id)}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#ec0000",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                  elevation: 5,
+                  marginTop: 10,
+                }}
+              >
+                <FontAwesome name="remove" size={37} color="white" />
+              </Pressable>
             </View>
     </View>
   );

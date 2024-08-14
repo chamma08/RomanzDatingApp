@@ -640,6 +640,26 @@ app.post("/send-like", async (req, res) => {
   }
 });
 
+//endpoint to remove a profile from the users filtered profiles
+app.post("/send-remove", async (req, res) => {
+  const { currentUserId, selectedUserId } = req.body;
+
+  try {
+    //update the recepient's friendRequestsArray!
+    await User.findByIdAndUpdate(selectedUserId, {
+      $pull: { recievedLikes: currentUserId },
+    });
+    //update the sender's sentFriendRequests array
+    await User.findByIdAndUpdate(currentUserId, {
+      $pull: { crushes: selectedUserId },
+    });
+
+    res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+});
+
 //ednpoint to get the details of the received Likes
 app.get("/received-likes/:userId/details", async (req, res) => {
   const { userId } = req.params;
