@@ -53,9 +53,9 @@ const Profile = ({ item, userId,setProfiles }) => {
   }
 
   return (
-    <View className="flex-1 relative mt-3">
+    <View className="flex-1 relative mt-3 ">
       <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 20 }}
+              style={{ flexDirection: "row", alignItems: "center", gap: 20, justifyContent: "center" }}
             >
               {liked ? (
                 <Pressable
@@ -74,19 +74,19 @@ const Profile = ({ item, userId,setProfiles }) => {
                     easing={"ease-in-out-circ"}
                     iterationCount={1}
                   >
-                    <AntDesign name="heart" size={37} color="red" />
+                    <AntDesign name="heart" size={30} color="red" />
                   </Animatable.View>
                 </Pressable>
               ) : (
                 <Pressable
                   onPress={() => handleLike(item?._id)}
                   style={{
-                    width: 50,
-                    height: 50,
+                    width: 45,
+                    height: 45,
                     borderRadius: 25,
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "#ff00a3",
+                    backgroundColor: "#ab00ff",
                     shadowColor: "#000",
                     shadowOffset: {
                       width: 0,
@@ -98,18 +98,18 @@ const Profile = ({ item, userId,setProfiles }) => {
                     marginTop: 10,
                   }}
                 >
-                  <AntDesign name="heart" size={37} color="white" />
+                  <AntDesign name="heart" size={28} color="white" />
                 </Pressable>
               )}
 
               <Pressable
                 style={{
-                  width: 50,
-                  height: 50,
+                  width: 45,
+                  height: 45,
                   borderRadius: 25,
                   justifyContent: "center",
                   alignItems: "center",
-                  backgroundColor: "#9300cc",
+                  backgroundColor: "#0433ff",
                   shadowColor: "#000",
                   shadowOffset: {
                     width: 0,
@@ -121,13 +121,13 @@ const Profile = ({ item, userId,setProfiles }) => {
                   marginTop: 10,
                 }}
               >
-                <FontAwesome name="star" size={37} color="white" />
+                <FontAwesome name="star" size={28} color="white" />
               </Pressable>
 
               <Pressable
                 style={{
-                  width: 50,
-                  height: 50,
+                  width: 45,
+                  height: 45,
                   borderRadius: 25,
                   justifyContent: "center",
                   alignItems: "center",
@@ -143,14 +143,14 @@ const Profile = ({ item, userId,setProfiles }) => {
                   marginTop: 10,
                 }}
               >
-                <Entypo name="block" size={37} color="white" />
+                <Entypo name="block" size={28} color="white" />
               </Pressable>
 
               <Pressable
                 onPress={() => handleRemove(item?._id)}
                 style={{
-                  width: 50,
-                  height: 50,
+                  width: 45,
+                  height: 45,
                   borderRadius: 25,
                   justifyContent: "center",
                   alignItems: "center",
@@ -166,7 +166,7 @@ const Profile = ({ item, userId,setProfiles }) => {
                   marginTop: 10,
                 }}
               >
-                <FontAwesome name="remove" size={37} color="white" />
+                <FontAwesome name="remove" size={28} color="white" />
               </Pressable>
             </View>
     </View>

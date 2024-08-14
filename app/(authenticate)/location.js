@@ -161,12 +161,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 80,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderWidth: 1,
     backgroundColor: '#ff0063',
     borderColor: '#ff0063',
+    
   },
   btnText: {
     fontSize: 17,

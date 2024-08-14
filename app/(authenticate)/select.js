@@ -127,7 +127,9 @@ const select = () => {
             marginTop: 55,
             backgroundColor: "#ff9200",
             padding: 12,
-            borderRadius: 4,
+            borderRadius: 80,
+            width: 150,
+            alignSelf: "center",
           }}
         >
           <Text

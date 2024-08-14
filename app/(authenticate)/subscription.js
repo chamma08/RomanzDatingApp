@@ -60,6 +60,7 @@ const subscription = () => {
       price: 0,
       badge: "Basic Access",
       description: "Connect with matches and send limited messages",
+      color: "#0069fe",
     },
     {
       id: "1",
@@ -67,6 +68,7 @@ const subscription = () => {
       price: 10,
       badge: "Recommended",
       description: "Send unlimited messages and see who liked you",
+      color: "silver",
     },
     {
       id: "2",
@@ -75,8 +77,47 @@ const subscription = () => {
       badge: "Best Value",
       description:
         "Enjoy all features including priority matches and profile boosts",
+      color: "#ffce00",
     },
   ];
+
+  const getRadioActiveStyle = (index) => {
+    if (value === index) {
+      return {
+        borderColor: items[index].color,
+        backgroundColor: "white",
+        borderWidth: 2,
+      };
+    }
+    return {};
+  };
+
+  const getRadioBadgeStyle = (index) => {
+    if (value === index) {
+      return {
+        bbackgroundColor: items[index].color,
+        paddingVertical: 6,
+        borderRadius: 6,
+        marginBottom: 12,
+      };
+    }
+    return styles.radioBadge;
+  };
+
+  const getRadioBadgeTextStyle = (index) => {
+    if (value === index) {
+      return {
+        fontSize: 15,
+        fontWeight: "500",
+        color: "white",
+        backgroundColor: items[index].color,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 6,
+      };
+    }
+    return styles.radioBadgeText;
+  };
 
   return (
     <ImageBackground
@@ -90,6 +131,7 @@ const subscription = () => {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.container}>
             <Text style={styles.title}>Pick your plan</Text>
+            <View style={styles.underline} />
             {items.map(({ label, price, badge, description }, index) => {
               const isActive = value === index;
               return (
@@ -100,21 +142,27 @@ const subscription = () => {
                     setOption(label.toLowerCase());
                   }}
                 >
-                  <View style={[styles.radio, isActive && styles.radioActive]}>
+                  <View
+                    style={[
+                      styles.radio,
+                      styles.radioInactive,
+                      isActive && styles.radioActive,
+                      getRadioActiveStyle(index),
+                    ]}
+                  >
                     <Text style={styles.radioLabel}>{label}</Text>
-                    <Text style={styles.radioPrice}>
-                      ${price}/month
-                    </Text>
-                    <View style={styles.radioBadge}>
-                      <Text style={styles.radioBadgeText}>{badge}</Text>
+                    <Text style={styles.radioPrice}>${price}/month</Text>
+                    <View style={getRadioBadgeStyle(index)}>
+                      <Text style={getRadioBadgeTextStyle(index)}>{badge}</Text>
                     </View>
-                    <Text style={styles.radioDescription}>
-                      {description}
-                    </Text>
+                    <Text style={styles.radioDescription}>{description}</Text>
                     <View
                       style={[
                         styles.radioInput,
-                        isActive && styles.radioInputActive,
+                        isActive && {
+                          backgroundColor: items[index].color,
+                          borderColor: items[index].color,
+                        },
                       ]}
                     />
                   </View>
@@ -122,7 +170,10 @@ const subscription = () => {
               );
             })}
 
-            <Pressable onPress={updateUserSubscription} style={styles.nextButton}>
+            <Pressable
+              onPress={updateUserSubscription}
+              style={styles.nextButton}
+            >
               <Text style={styles.nextButtonText}>Next</Text>
             </Pressable>
           </View>
@@ -154,6 +205,14 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textAlign: "center",
   },
+  underline: {
+    height: 8,
+    backgroundColor: "#e300ff",
+    marginBottom: 24,
+    width: "40%",
+    alignSelf: "center",
+    borderRadius: 5,
+  },
   radio: {
     position: "relative",
     backgroundColor: "#fff",
@@ -173,8 +232,13 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
     elevation: 2,
   },
+  radioInactive: {
+    backgroundColor: "#fff",
+    borderColor: "transparent",
+  },
   radioActive: {
-    borderColor: "#0069fe",
+    backgroundColor: "white", // Same background as inactive
+    borderColor: "#0069fe", // Active border color
   },
   radioLabel: {
     fontSize: 14,
@@ -224,10 +288,10 @@ const styles = StyleSheet.create({
   nextButton: {
     marginTop: 35,
     marginBottom: 30,
-    backgroundColor: "#ff9200",
+    backgroundColor: "#ff0063",
     padding: 12,
-    borderRadius: 4,
-    width: 200,
+    borderRadius: 70,
+    width: 150,
     justifyContent: "center",
     alignSelf: "center",
     alignItems: "center",

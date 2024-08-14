@@ -136,6 +136,7 @@ const Register = () => {
                 placeholder="Enter your email"
                 placeholderTextColor={"#c8c8c8"}
                 style={styles.input}
+                keyboardType="email-address"
               />
             </View>
 
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ebebeb',
+    backgroundColor: '#eeeeee',
     paddingVertical: 10,
     borderRadius: 20,
     marginBottom: 15,
