@@ -176,9 +176,9 @@ const type = () => {
           style={{
             marginTop: 35,
             marginBottom: 30,
-            backgroundColor: "#ff9200",
+            backgroundColor: "#ff0063",
             padding: 12,
-            borderRadius: 4,
+            borderRadius: 80,
             width: 200,
           }}
         >

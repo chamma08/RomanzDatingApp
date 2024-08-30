@@ -13,7 +13,7 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState } from "react";
-import { MaterialIcons, Ionicons, AntDesign, Feather } from "@expo/vector-icons";
+import { MaterialIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,7 +25,10 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false); 
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
 
   const handleAgeChange = (text) => {
     const numericText = text.replace(/[^0-9]/g, '');
@@ -57,6 +60,11 @@ const Register = () => {
       return;
     }
 
+    if (password !== confirmPassword) {
+      Alert.alert("Password Mismatch", "Password and confirm password do not match");
+      return;
+    }
+
     const user = { name, email, password, age };
 
     axios.post("https://romanz-dating-app.vercel.app/register", user)
@@ -66,6 +74,7 @@ const Register = () => {
         setName("");
         setEmail("");
         setPassword("");
+        setConfirmPassword("");
         setAge("");
         router.replace("/login");
       })
@@ -94,7 +103,7 @@ const Register = () => {
         style={styles.container}
       >
         <ScrollView contentContainerStyle={styles.scrollView}>
-          <Text style={styles.title}>Register to your Account</Text>
+          <Text style={styles.title}>Register your Account</Text>
 
           <View style={styles.imageContainer}>
             <Image
@@ -145,11 +154,43 @@ const Register = () => {
               <TextInput
                 value={password}
                 onChangeText={(text) => setPassword(text)}
-                secureTextEntry={true}
+                secureTextEntry={!showPassword}
                 placeholder="Enter your password"
                 style={styles.input}
                 placeholderTextColor="#c8c8c8"
               />
+              <Pressable onPress={() => setShowPassword(!showPassword)}>
+                <Ionicons
+                  name={showPassword ? "eye" : "eye-off"}
+                  size={20}
+                  color="black"
+                  style={{
+                    marginRight: 10,
+                  }}
+                />
+              </Pressable>
+            </View>
+
+            <View style={styles.inputWrapper}>
+              <AntDesign style={styles.icon} name="lock" size={24} color="#6a6a6a" />
+              <TextInput
+                value={confirmPassword}
+                onChangeText={(text) => setConfirmPassword(text)}
+                secureTextEntry={!showConfirmPassword}
+                placeholder="Confirm your password"
+                style={styles.input}
+                placeholderTextColor="#c8c8c8"
+              />
+              <Pressable onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                <Ionicons
+                  name={showConfirmPassword ? "eye" : "eye-off"}
+                  size={20}
+                  color="black"
+                  style={{
+                    marginRight: 10,
+                  }}
+                />
+              </Pressable>
             </View>
 
             <LinearGradient
@@ -249,37 +290,34 @@ const styles = StyleSheet.create({
   input: {
     color: 'black',
     flex: 1,
-    marginVertical: 10,
-    fontSize: 17,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
   },
   registerButton: {
-    width: '40%',
-    backgroundColor: '#ff9200',
-    borderRadius: 40,
-    alignSelf: 'center',
-    padding: 10,
+    width: '100%',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
     marginTop: 20,
+    paddingVertical: 10, // Adjust padding for better touchable area
   },
   registerButtonText: {
-    textAlign: 'center',
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   loginLink: {
-    marginTop: 12,
+    marginTop: 20,
     marginBottom: 20,
   },
   loginText: {
-    textAlign: 'center',
     color: 'black',
     fontSize: 16,
+    alignSelf: 'center',
   },
   loginLinkText: {
-    fontSize: 16,
-    color: '#FF69B4',
     fontWeight: 'bold',
+    color: '#FF3974',
   },
 });
 

@@ -22,6 +22,7 @@ import { router } from "expo-router";
 import { Entypo } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import { storage, ref, uploadBytes, getDownloadURL } from "../../../firebase";
+import { Ionicons } from "@expo/vector-icons";
 
 const editProfile = ({}) => {
   const [image, setImage] = useState(null);
@@ -250,25 +251,16 @@ const editProfile = ({}) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "#ffffff",
+        backgroundColor: "white",
         paddingHorizontal: 22,
       }}
     >
-      <ImageBackground
-        source={require("../../../assets/topVector.png")}
-        style={{
-          width: "112%",
-          height: 170,
-          alignSelf: "center",
-          zIndex: -5,
-        }}
-      >
+      
         <View
           style={{
             justifyContent: "center",
             marginHorizontal: 12,
             flexDirection: "row",
-            marginTop: 20,
           }}
         >
           <TouchableOpacity
@@ -276,26 +268,26 @@ const editProfile = ({}) => {
             style={{
               position: "absolute",
               left: 0,
-              backgroundColor: "white",
+              backgroundColor: "black",
               borderRadius: 50,
+              marginTop: 5,
             }}
           >
-            <MaterialIcons name="keyboard-arrow-left" size={50} color="black" />
+            <MaterialIcons name="keyboard-arrow-left" size={35} color="white" />
           </TouchableOpacity>
           <Text
             style={{
-              fontSize: 35,
+              fontSize: 30,
               fontWeight: "700",
               color: "black",
               textAlign: "center",
-              fontFamily: "serif",
-              fontStyle: "italic",
+              marginBottom: 40,
             }}
           >
             Edit Profile
           </Text>
         </View>
-      </ImageBackground>
+
 
       <View
         style={{
@@ -371,19 +363,15 @@ const editProfile = ({}) => {
           flex: 1,
           padding: 12,
           borderRadius: 10,
-          backgroundColor: "#fffae5",
+          backgroundColor: "transparent",
           marginTop: 20,
           marginBottom: 10,
-          elevation: 5, // Android shadow
-          shadowColor: '#000', // iOS shadow
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4
+          
         }}
         scrollViewContent={{ flexGrow: 1 }}
       >
         <View style={{ flexDirection: "column", marginBottom: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Name</Text>
+          {/* <Text style={{ fontSize: 20, fontWeight: "500" }}>Name</Text> */}
 
           <View
             style={{
@@ -391,13 +379,19 @@ const editProfile = ({}) => {
               width: "100%",
               backgroundColor: "white",
               borderRadius: 10,
-              justifyContent: "center",
               borderWidth: 1,
-              borderColor: "gray",
+              borderColor: "#ffa300",
               marginVertical: 6,
               paddingLeft: 8,
+              display: "flex",
+              flexDirection: "row",
             }}
           >
+            <Ionicons style={{
+              marginTop: 10,
+              marginLeft: 5,
+              paddingRight: 5,
+            }} name="person-sharp" size={24} color="black" />
             <TextInput
               value={name}
               onChangeText={(text) => {
@@ -448,20 +442,26 @@ const editProfile = ({}) => {
         </View>
 
         <View style={{ flexDirection: "column", marginBottom: 6 }}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Email</Text>
+          {/* <Text style={{ fontSize: 20, fontWeight: "500" }}>Email</Text> */}
           <View
             style={{
               height: 50,
               width: "100%",
               backgroundColor: "white",
               borderRadius: 10,
-              justifyContent: "center",
               borderWidth: 1,
-              borderColor: "gray",
+              borderColor: "#ffa300",
               marginVertical: 6,
               paddingLeft: 8,
+              display: "flex",
+              flexDirection: "row",
             }}
           >
+            <MaterialIcons style={{
+              marginTop: 10,
+              marginLeft: 5,
+              paddingRight: 5,
+            }} name="email" size={28} color="black" />
             <TextInput
               value={email}
               onChangeText={(text) => {
@@ -512,20 +512,27 @@ const editProfile = ({}) => {
         </View>
 
         <View style={{ flexDirection: "column", marginBottom: 6 }}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Age</Text>
+          {/* <Text style={{ fontSize: 20, fontWeight: "500" }}>Age</Text> */}
           <View
             style={{
               height: 50,
               width: "100%",
               backgroundColor: "white",
               borderRadius: 10,
-              justifyContent: "center",
               borderWidth: 1,
-              borderColor: "gray",
+              borderColor: "#ffa300",
               marginVertical: 6,
               paddingLeft: 8,
+              display: "flex",
+              flexDirection: "row",
+
             }}
           >
+            <Ionicons style={{
+              marginTop: 10,
+              marginLeft: 5,
+              paddingRight: 5,
+            }} name="finger-print" size={24} color="black" />
             <TextInput
               value={age}
               editable={false}
@@ -534,21 +541,27 @@ const editProfile = ({}) => {
           </View>
         </View>
         <View style={{ flexDirection: "column", marginBottom: 6 }}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Gender</Text>
+          {/* <Text style={{ fontSize: 20, fontWeight: "500" }}>Gender</Text> */}
           <View
             style={{
               height: 50,
               width: "100%",
               backgroundColor: "white",
               borderRadius: 10,
-              justifyContent: "center",
               borderWidth: 1,
-              borderColor: "gray",
+              borderColor: "#ffa300",
               marginVertical: 6,
               paddingLeft: 8,
               marginBottom: 20,
+              display: "flex",
+              flexDirection: "row",
             }}
           >
+            <MaterialIcons style={{
+              marginTop: 10,
+              marginLeft: 5,
+              paddingRight: 5,
+            }} name="code" size={28} color="black" />
             <TextInput
               value={gender}
               editable={false}

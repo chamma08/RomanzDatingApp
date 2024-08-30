@@ -85,7 +85,7 @@ const subscription = () => {
     if (value === index) {
       return {
         borderColor: items[index].color,
-        backgroundColor: "white",
+        backgroundColor: "#ebebeb",
         borderWidth: 2,
       };
     }
@@ -120,18 +120,15 @@ const subscription = () => {
   };
 
   return (
-    <ImageBackground
-      source={{
-        uri: "https://firebasestorage.googleapis.com/v0/b/mern-blog-19722.appspot.com/o/bg1.jpg?alt=media&token=baf261fe-33d5-40fb-94bc-fc3c8987f36a",
-      }}
-      resizeMode="cover"
+    <ScrollView
+      
       style={{ flex: 1 }}
     >
       <View style={styles.overlay}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.container}>
             <Text style={styles.title}>Pick your plan</Text>
-            <View style={styles.underline} />
+            {/* <View style={styles.underline} /> */}
             {items.map(({ label, price, badge, description }, index) => {
               const isActive = value === index;
               return (
@@ -179,7 +176,7 @@ const subscription = () => {
           </View>
         </ScrollView>
       </View>
-    </ImageBackground>
+    </ScrollView>
   );
 };
 
@@ -188,7 +185,7 @@ export default subscription;
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "white",
   },
   scrollContainer: {
     flexGrow: 1,
@@ -201,15 +198,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "700",
-    color: "white",
+    color: "black",
     marginBottom: 12,
     textAlign: "center",
   },
   underline: {
     height: 8,
-    backgroundColor: "#e300ff",
+    backgroundColor: "#ffb000",
     marginBottom: 24,
-    width: "40%",
+    width: "30%",
     alignSelf: "center",
     borderRadius: 5,
   },
@@ -233,18 +230,18 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   radioInactive: {
-    backgroundColor: "#fff",
+    backgroundColor: "#ebebeb",
     borderColor: "transparent",
   },
   radioActive: {
-    backgroundColor: "white", // Same background as inactive
+    backgroundColor: "black", // Same background as inactive
     borderColor: "#0069fe", // Active border color
   },
   radioLabel: {
     fontSize: 14,
     fontWeight: "600",
     letterSpacing: 1.2,
-    color: "#b3b3b3",
+    color: "#888888",
     textTransform: "uppercase",
     marginBottom: 8,
   },

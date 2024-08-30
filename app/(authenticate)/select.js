@@ -125,7 +125,7 @@ const select = () => {
           onPress={updateUserGender}
           style={{
             marginTop: 55,
-            backgroundColor: "#ff9200",
+            backgroundColor: "#ff0063",
             padding: 12,
             borderRadius: 80,
             width: 150,

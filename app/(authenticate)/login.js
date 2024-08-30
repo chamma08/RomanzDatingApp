@@ -21,6 +21,7 @@ import "core-js/stable/atob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import LottieView from "lottie-react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,6 +29,7 @@ const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false); 
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -131,11 +133,21 @@ const login = () => {
             <TextInput
               value={password}
               onChangeText={(text) => setPassword(text)}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               placeholder="Enter your password"
               placeholderTextColor="#c8c8c8"
               style={styles.input}
             />
+            <Pressable onPress={() => setShowPassword(!showPassword)}>
+                <Ionicons
+                  name={showPassword ? "eye" : "eye-off"}
+                  size={20}
+                  color="black"
+                  style={{
+                    marginRight: 10,
+                  }}
+                />
+              </Pressable>
           </View>
 
           <View style={styles.footer}>
@@ -228,7 +240,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 20,
     marginVertical: 10,
-    width: "90%",
+    width: "95%",
   },
   input: {
     color: "black",
@@ -250,7 +262,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   loginButton: {
-    width: "35%",
+    width: "60%",
     borderRadius: 40,
     padding: 10,
     marginTop: 40,
